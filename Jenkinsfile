@@ -30,7 +30,9 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('SPRINGBOOT-ECOMMERCEAPI') {
-                    bat 'mvn clean package -DskipTests'
+                    withMaven(maven: 'MAVEN_HOME') {
+                        bat 'mvn clean package -DskipTests'
+                    }
                 }
             }
         }
