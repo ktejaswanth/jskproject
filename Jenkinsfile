@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'MAVEN_HOME'   // 👈 must match the name in Jenkins "Global Tool Configuration"
-    }
-
     stages {
 
         // ===== FRONTEND BUILD =====
@@ -34,7 +30,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('SPRINGBOOT-ECOMMERCEAPI') {
-                    bat 'mvn clean package -DskipTests'
+                    bat 'mvn clean package'
                 }
             }
         }
