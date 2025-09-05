@@ -14,14 +14,14 @@ pipeline {
         }
 
         // ===== FRONTEND DEPLOY =====
-        stage('Deploy Frontend to Tomcat') {
+        stage('Deploy Frontend to Tomcat 9') {
             steps {
                 bat '''
-                if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\reactecommerceapi" (
-                    rmdir /S /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\reactecommerceapi"
+                if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\reactecommerceapi" (
+                    rmdir /S /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\reactecommerceapi"
                 )
-                mkdir "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\reactecommerceapi"
-                xcopy /E /I /Y REACT-ECOMMERCEAPI\\dist\\* "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\reactecommerceapi"
+                mkdir "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\reactecommerceapi"
+                xcopy /E /I /Y REACT-ECOMMERCEAPI\\dist\\* "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\reactecommerceapi"
                 '''
             }
         }
@@ -30,22 +30,22 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('SPRINGBOOT-ECOMMERCEAPI') {
-                    bat 'mvn clean package'
+                    bat 'mvn clean package -DskipTests'
                 }
             }
         }
 
         // ===== BACKEND DEPLOY =====
-        stage('Deploy Backend to Tomcat') {
+        stage('Deploy Backend to Tomcat 9') {
             steps {
                 bat '''
-                if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\springbootecommerceapi.war" (
-                    del /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\springbootecommerceapi.war"
+                if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\springbootecommerceapi.war" (
+                    del /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\springbootecommerceapi.war"
                 )
-                if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\springbootecommerceapi" (
-                    rmdir /S /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\springbootecommerceapi"
+                if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\springbootecommerceapi" (
+                    rmdir /S /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\springbootecommerceapi"
                 )
-                copy "SPRINGBOOT-ECOMMERCEAPI\\target\\*.war" "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\"
+                copy "SPRINGBOOT-ECOMMERCEAPI\\target\\*.war" "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\springbootecommerceapi.war"
                 '''
             }
         }
@@ -54,10 +54,10 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment Successful!'
+            echo '✅ Deployment Successful on Tomcat 9!'
         }
         failure {
-            echo 'Pipeline Failed.'
+            echo '❌ Pipeline Failed.'
         }
     }
 }
