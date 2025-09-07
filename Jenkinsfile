@@ -30,7 +30,10 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('SPRINGBOOT-ECOMMERCEAPI') {
-                    bat 'mvn clean package -DskipTests'
+                    // 👇 Use the Maven installation configured in Jenkins
+                    withMaven(maven: 'M3') {
+                        bat 'mvn clean package -DskipTests'
+                    }
                 }
             }
         }
@@ -45,10 +48,11 @@ pipeline {
                 if exist "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\springbootecommerceapi" (
                     rmdir /S /Q "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\springbootecommerceapi"
                 )
-                copy SPRINGBOOT-ECOMMERCEAPI\\target\\*.war "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\springbootecommerceapi.war"
+                copy "SPRINGBOOT-ECOMMERCEAPI\\target\\*.war" "C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\webapps\\springbootecommerceapi.war"
                 '''
             }
         }
+
     }
 
     post {
